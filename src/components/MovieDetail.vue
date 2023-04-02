@@ -1,6 +1,18 @@
 <template>
-  <div class="container my-5">
-    <div class="row">
+  <div class="container my-5" style="height: 400px">
+    <div v-if="!movie" class="row h-100">
+      <div class="col-md-4 placeholder-glow">
+        <span class="placeholder w-75 h-75 rounded"></span>
+      </div>
+      <div class="col-md-8">
+        <span class="placeholder w-25"></span>
+        <span class="placeholder w-50"></span>
+        <span class="placeholder w-75"></span>
+        <span class="placeholder w-75"></span><span class="w-25"></span>
+        <span class="placeholder w-25"></span>
+      </div>
+    </div>
+    <div v-else class="row">
       <div class="col-md-4">
         <img
           :src="movie.Poster"
@@ -25,7 +37,7 @@ import { getMovieDetailsRequest } from "../services/movies.js";
 export default {
   data() {
     return {
-      movie: {},
+      movie: null,
     };
   },
   created() {

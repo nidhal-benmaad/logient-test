@@ -1,6 +1,9 @@
 <template>
   <div class="mb-4 box-shadow">
-    <router-link :to="{ name: 'MovieDetail', params: { id: movie.imdbID } }">
+    <router-link
+      :to="{ name: 'MovieDetail', params: { id: movie.imdbID } }"
+      class="image-container"
+    >
       <img
         class="card-img-top rounded"
         height="360"
@@ -47,4 +50,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-container img {
+  display: block;
+  transition: transform 0.3s ease-out;
+}
+
+.image-container:hover img {
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+</style>

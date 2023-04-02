@@ -32,3 +32,26 @@
     background-color: #1f1f1f;
     color: whitesmoke;
 }
+
+.background-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('/cinema-background.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+.background-image::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+    /* Change the alpha value to adjust the opacity of the overlay */
+}

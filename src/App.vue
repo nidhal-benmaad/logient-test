@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar v-if="$route.path !== '/login' || $route.path !== '/register'" />
+    <NavBar v-if="visible" />
     <router-view :user="user" @login="login"></router-view>
   </div>
 </template>
@@ -15,7 +15,20 @@ export default {
   data() {
     return {
       user: null,
+      visible: true,
     };
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler(to) {
+        if (to.name == "Login" || to.name == "Register") {
+          this.visible = false;
+        } else {
+          this.visible = true;
+        }
+      },
+    },
   },
   methods: {
     login(user) {

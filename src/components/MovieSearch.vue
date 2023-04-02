@@ -33,41 +33,29 @@ export default {
   },
   created() {
     eventBus.on("handle-like", (newItem) => {
-      console.log("onHandleLike ", newItem);
-
-      let index = this.movies.findIndex(
-        (item) => item.imdbID === newItem.imdbID
-      );
-      this.movies.splice(index, 1, newItem);
-      // get the user from localStorage
       let user = JSON.parse(localStorage.getItem("user") || null);
       // push the new favorite movie to the user object
-      console.log("user", user);
       if (!user) {
         this.$router.push({ name: "Login" });
         return;
       }
-      if (user.hasOwnProperty("favorites") && Array.isArray(user.favorites)) {
-        user.favorites.push(newItem.imdbID);
-      } else {
-        // console.log(first);
-        user.favorites = [newItem.imdbID];
-      }
-      localStorage.setItem("user", JSON.stringify(user));
+      this.handleUserFavorites(user, newItem);
     });
   },
   beforeUnmount() {
     eventBus.off("handle-like");
   },
   mounted() {
-    this.query = localStorage.getItem("query");
-    const movies = localStorage.getItem("movies");
-    if (movies) {
-      this.movies = JSON.parse(movies);
-      this.movies = this.movies.map((item) => ({
+    this.query = JSON.parse(localStorage.getItem("query"));
+    const movies = JSON.parse(localStorage.getItem("movies")) || [];
+    const user = JSON.parse(localStorage.getItem("user") || null);
+    if (user) {
+      this.movies = movies.map((item) => ({
         ...item,
-        liked: false,
+        liked: user.favorites.includes(item.imdbID),
       }));
+    } else {
+      this.movies = movies;
       console.log("this.movies", this.movies);
     }
   },
@@ -98,6 +86,23 @@ export default {
           }
           console.log(error.config);
         });
+    },
+    handleUserFavorites(user, newItem) {
+      let index = this.movies.findIndex(
+        (item) => item.imdbID === newItem.imdbID
+      );
+      this.movies.splice(index, 1, newItem);
+      // get the user from localStorage
+      console.log("newItem.liked", newItem.liked);
+      if (newItem.liked) {
+        if (!user.favorites.includes(newItem.imdbID))
+          user.favorites.push(newItem.imdbID);
+      } else {
+        let index = user.favorites.findIndex((item) => item === newItem.imdbID);
+        user.favorites.splice(index, 1);
+      }
+      localStorage.setItem("movies", JSON.stringify(this.movies));
+      localStorage.setItem("user", JSON.stringify(user));
     },
   },
 };
